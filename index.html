@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 1 Practice</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --card: #ffffff; --text: #1d1f23; --muted: #6b7078;
+    --line: #e2e4e8; --ok: #1f8a4c; --ok-bg: #e7f6ed; --bad: #c0392b; --bad-bg: #fdecea;
+    --accent: #2457c5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121316; --card: #1c1e22; --text: #eceef1; --muted: #9aa0a8;
+      --line: #2c2f35; --ok: #4cc47f; --ok-bg: #16301f; --bad: #ff7a6b; --bad-bg: #3a1c19;
+      --accent: #7aa2ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { position: sticky; top: 0; z-index: 5; background: var(--bg);
+           padding: 12px 0; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--text);
+           padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .score { margin-left: auto; font-weight: 600; }
+  h2 { font-size: 1rem; color: var(--muted); margin: 28px 0 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+       padding: 16px 18px; margin-bottom: 12px; }
+  .qn { font-weight: 700; font-size: .9rem; color: var(--muted); margin-bottom: 4px; }
+  .qt { margin: 0 0 12px; font-size: 1.05rem; }
+  label { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px;
+          border: 1px solid transparent; cursor: pointer; }
+  label + label { margin-top: 4px; }
+  input[type=radio] { width: 18px; height: 18px; margin: 0; accent-color: var(--ok); flex: none; }
+  label.correct { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); font-weight: 600; }
+  label.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  label .tag { margin-left: auto; font-size: .8rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Paper 1 — Quiz</h1>
+    <p class="sub">Answer all 30 questions, then press <b>Submit</b> to see your score.</p>
+    <div class="bar">
+      <button id="submitBtn" class="primary">Submit</button>
+      <button id="restartBtn">Restart</button>
+      <span class="score" id="score"></span>
+    </div>
+  </header>
+  <main id="quiz"></main>
+  <div class="bar" style="margin-top:20px">
+    <button id="submitBtn2" class="primary">Submit</button>
+  </div>
+</div>
+
+<script>
+const TF = ["True", "False"];
+const QUESTIONS = [
+  // Section A
+  { s: "A", q: "You do not need health insurance for the permit process.", o: TF, a: 1 },
+  { s: "A", q: "The black bag is used for general waste.", o: TF, a: 0 },
+  { s: "A", q: "You can report discrimination to the NCPE or the police.", o: TF, a: 0 },
+  { s: "A", q: "Walking in Malta is impossible because towns are very large.", o: TF, a: 1 },
+  { s: "A", q: "You can join sports clubs in Malta to meet people.", o: TF, a: 0 },
+  { s: "A", q: "Primary school in Malta is for children aged 5-11.", o: TF, a: 0 },
+  { s: "A", q: "Proof of address may be needed to open a bank account.", o: TF, a: 0 },
+  { s: "A", q: "Church schools in Malta are free but may ask for a donation.", o: TF, a: 0 },
+  { s: "A", q: "Taxis and ride-hailing apps are available in Malta.", o: TF, a: 0 },
+  { s: "A", q: "Respecting personal space is important in Malta.", o: TF, a: 0 },
+  { s: "A", q: "Same-sex couples do not have rights in Malta.", o: TF, a: 1 },
+  { s: "A", q: "Cars drive on the right-hand side of the road in Malta.", o: TF, a: 1 },
+  { s: "A", q: "Private health insurance is required during your first year in Malta.", o: TF, a: 0 },
+  { s: "A", q: "If someone treats you badly, you can report it.", o: TF, a: 0 },
+  { s: "A", q: "RVM machines give vouchers when you return beverage containers.", o: TF, a: 0 },
+  { s: "A", q: "The law protects people from discrimination.", o: TF, a: 0 },
+  { s: "A", q: "Malta welcomes people with different religions.", o: TF, a: 0 },
+  { s: "A", q: "The emergency number 112 connects only to ambulance services", o: TF, a: 1 },
+  { s: "A", q: "Vaccinations and medical records may be required.", o: TF, a: 0 },
+  { s: "A", q: "Adults cannot study English or Maltese through evening courses.", o: TF, a: 1 },
+  // Section B
+  { s: "B", q: "Why is having a bank account important for work in Malta?",
+    o: ["Your salary must be paid by bank transfer", "You need it to rent a bicycle",
+        "You cannot enter a supermarket without one", "It replaces a passport"], a: 0 },
+  { s: "B", q: "Which bag is used for recyclable waste?",
+    o: ["Black bag", "Grey bag", "Blue bag", "Red bag"], a: 1 },
+  { s: "B", q: "How should you behave in a church or mosque?",
+    o: ["Shout", "Dress modestly and remain in silence", "Run", "Take selfies loudly"], a: 1 },
+  { s: "B", q: "What documents are normally needed to open a bank account in Malta?",
+    o: ["Passport, proof of address, work contract", "A gym membership", "A bus ticket",
+        "Photos of your old house"], a: 0 },
+  { s: "B", q: "When is Malta's Independence Day?",
+    o: ["21 July", "21 September", "10 October", "25 December"], a: 1 },
+  { s: "B", q: "Why are health documents useful?",
+    o: ["They help when visiting a doctor or applying for work", "They are used for shopping discounts",
+        "They are needed to buy furniture", "They are used to book taxis"], a: 0 },
+  { s: "B", q: "Utilities (electricity, water, internet) usually cost:",
+    o: ["€10-€30", "€80-€150", "€200-€300", "€400-€500"], a: 1 },
+  { s: "B", q: "What should you always keep documented when renting accommodation?",
+    o: ["A list of neighbours", "A copy of your contract and payment receipts", "A map of the area",
+        "Extra keys"], a: 1 },
+  { s: "B", q: "What should you do with your passport to stay safe?",
+    o: ["Make a copy of it", "Leave it at a bus stop", "Give it to strangers", "Keep it in the kitchen"], a: 0 },
+  { s: "B", q: "Why should your passport be valid for at least six months?",
+    o: ["To avoid problems when travelling", "To get cheaper flights", "To enter museums",
+        "To buy a SIM card"], a: 0 },
+];
+
+const root = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let submitted = false;
+
+function render() {
+  root.innerHTML = "";
+  let section = null;
+  QUESTIONS.forEach((item, i) => {
+    if (item.s !== section) {
+      section = item.s;
+      const h = document.createElement("h2");
+      h.textContent = "Section " + section;
+      root.appendChild(h);
+    }
+    const card = document.createElement("div");
+    card.className = "q";
+    card.id = "card" + i;
+    card.innerHTML = `<div class="qn">Question ${i + 1}</div><p class="qt"></p>`;
+    card.querySelector(".qt").textContent = item.q;
+    item.o.forEach((opt, j) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "q" + i;
+      input.value = j;
+      input.addEventListener("change", updateProgress);
+      const span = document.createElement("span");
+      span.textContent = opt;
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      label.append(input, span, tag);
+      card.appendChild(label);
+    });
+    root.appendChild(card);
+  });
+}
+
+function answeredCount() {
+  return document.querySelectorAll("#quiz input:checked").length;
+}
+
+function updateProgress() {
+  if (!submitted) scoreEl.textContent = `Answered: ${answeredCount()} / ${QUESTIONS.length}`;
+}
+
+function submit() {
+  if (submitted) return;
+  const left = QUESTIONS.length - answeredCount();
+  if (left > 0 && !confirm(`You have ${left} unanswered question(s). Submit anyway?`)) return;
+  submitted = true;
+  let right = 0;
+  QUESTIONS.forEach((item, i) => {
+    const radios = document.querySelectorAll(`input[name=q${i}]`);
+    radios.forEach((r, j) => {
+      r.disabled = true;
+      const label = r.parentElement;
+      if (j === item.a) {
+        label.classList.add("correct");
+        label.querySelector(".tag").textContent = r.checked ? "✓ Your answer" : "✓ Correct answer";
+      } else if (r.checked) {
+        label.classList.add("wrong");
+        label.querySelector(".tag").textContent = "✗ Your answer";
+      }
+    });
+    const picked = document.querySelector(`input[name=q${i}]:checked`);
+    if (picked && +picked.value === item.a) right++;
+  });
+  const pct = Math.round((right / QUESTIONS.length) * 100);
+  scoreEl.textContent = `Score: ${right} / ${QUESTIONS.length} (${pct}%)`;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function restart() {
+  submitted = false;
+  render();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("submitBtn").addEventListener("click", submit);
+document.getElementById("submitBtn2").addEventListener("click", submit);
+document.getElementById("restartBtn").addEventListener("click", restart);
+restart();
+</script>
+</body>
+</html>
